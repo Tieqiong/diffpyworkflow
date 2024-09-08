@@ -1,0 +1,19 @@
+name: Gather coverage report and upload to codecov
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - prereleased
+      - published
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  coverage:
+    uses: Tieqiong/diffpyworkflow/.github/workflows/re_codecov.yml@main
