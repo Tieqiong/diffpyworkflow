@@ -6,10 +6,6 @@ on:
       - published
   workflow_dispatch:
 
-defaults:
-  run:
-    shell: bash -l {0}
-
 jobs:
   docs:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_docs.yml@main

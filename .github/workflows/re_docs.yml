@@ -2,12 +2,27 @@ name: Build and Deploy Documentation
 
 on:
   workflow_call:
+    inputs:
+      project:
+        description: 'Name of the project to test'
+        default: 'PROJECT_NAME'
+        required: false
+        type: string
+      c_extension:
+        description: 'Whether the project has a C extension'
+        default: false
+        required: false
+        type: boolean
 
 jobs:
   docs:
+    defaults:
+      run:
+        shell: bash -l {0}
+
     runs-on: ubuntu-latest
     steps:
-      - name: Check out PROJECT_NAME
+      - name: Check out ${{ inputs.project }}
         uses: actions/checkout@v4
 
       - name: Initialize miniconda
@@ -23,13 +38,19 @@ jobs:
           conda config --set always_yes yes
           --set changeps1 no
 
-      - name: Install PROJECT_NAME and build requirements
+      - name: IInstall ${{ inputs.project }} and docs requirements
         run: |
-          conda install --file requirements/build.txt
           conda install --file requirements/run.txt
           conda install --file requirements/docs.txt
+          if ${{ inputs.c_extension }}; then
+            conda install --file requirements/build.txt
+          fi
           python -m pip install -r requirements/pip.txt
-          python -m pip install . --no-deps
+          if ${{ inputs.c_extension }}; then
+            python -m pip install -e . --no-deps # remove this after modifying pytest.ini
+          else
+            python -m pip install . --no-deps
+          fi
 
       - name: build documents
         run: make -C doc html

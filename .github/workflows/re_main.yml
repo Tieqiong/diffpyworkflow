@@ -2,12 +2,32 @@ name: Test
 
 on:
   workflow_call:
+    inputs:
+      project:
+        description: 'Name of the project to test'
+        default: 'PROJECT_NAME'
+        required: false
+        type: string
+      c_extension:
+        description: 'Whether the project has a C extension'
+        default: false
+        required: false
+        type: boolean
+      headless:
+        description: 'Whether to run headless tests'
+        default: false
+        required: false
+        type: boolean
 
 jobs:
   validate:
+    defaults:
+      run:
+        shell: bash -l {0}
+
     runs-on: ubuntu-latest
     steps:
-      - name: Check out PROJECT_NAME
+      - name: Check out ${{ inputs.project }}
         uses: actions/checkout@v4
 
       - name: Initialize miniconda
@@ -23,12 +43,30 @@ jobs:
           conda config --set always_yes yes
           --set changeps1 no
 
-      - name: Install PROJECT_NAME and requirements
+      - name: Install ${{ inputs.project }} and requirements
         run: |
           conda install --file requirements/run.txt
           conda install --file requirements/test.txt
+          if ${{ inputs.c_extension }}; then
+            conda install --file requirements/build.txt
+          fi
           python -m pip install -r requirements/pip.txt
-          python -m pip install . --no-deps
+          if ${{ inputs.c_extension }}; then
+            python -m pip install -e . --no-deps # remove this after modifying pytest.ini
+          else
+            python -m pip install . --no-deps
+          fi
 
-      - name: Validate PROJECT_NAME
-        run: python -m pytest
+      - name: Start Xvfb
+        if: ${{ inputs.headless }}
+        run: |
+          sudo apt-get install -y xvfb
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x16 &
+
+      - name: Validate ${{ inputs.project }}
+        run: |
+          if ${{ inputs.headless }}; then
+            xport DISPLAY=:99
+          fi
+          python -m pytest
