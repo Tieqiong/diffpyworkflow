@@ -10,15 +10,10 @@ on:
       - published
   workflow_dispatch:  
 
-env:
-  project: diffpy.workflow
-  c_extension: false
-  headless: false
-
 jobs:
   coverage:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_codecov.yml@main
     with:
-      project: $project
-      c_extension: $c_extension
-      headless: $headless
+      project: diffpy.workflow
+      c_extension: false
+      headless: false

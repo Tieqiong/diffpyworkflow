@@ -6,13 +6,9 @@ on:
       - published
   workflow_dispatch:
 
-env:
-  project: diffpy.workflow
-  c_extension: false
-
 jobs:
   docs:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_docs.yml@main
     with:
-      project: $project
-      c_extension: $c_extension
+      project: diffpy.workflow
+      c_extension: false
