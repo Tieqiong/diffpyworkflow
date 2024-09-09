@@ -6,11 +6,16 @@ on:
       - main
   pull_request:
   workflow_dispatch:
-  
+
+env:
+  project: diffpy.workflow
+  c_extension: false
+  headless: false
+
 jobs:
   validate:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_main.yml@main
     with:
-      project: diffpy.workflow
-      c_extension: false
-      headless: false
+      project: $env.project
+      c_extension: $env.c_extension
+      headless: $env.headless
