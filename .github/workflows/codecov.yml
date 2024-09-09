@@ -8,17 +8,12 @@ on:
     types:
       - prereleased
       - published
-  workflow_dispatch:
-
-env:
-  project: diffpy.workflow
-  c_extension: false
-  headless: false
+  workflow_dispatch:  
 
 jobs:
   coverage:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_codecov.yml@main
     with:
-      project: ${{ env.project }}
-      c_extension: ${{ env.c_extension }}
-      headless: ${{ env.headless }}
+      project: diffpy.workflow
+      c_extension: false
+      headless: false
