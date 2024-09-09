@@ -10,5 +10,5 @@ jobs:
   docs:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_docs.yml@main
     with:
-      project: diffpy.workflow
+      project: PROJECT_NAME
       c_extension: false
