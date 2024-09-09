@@ -16,6 +16,6 @@ jobs:
   validate:
     uses: Tieqiong/diffpyworkflow/.github/workflows/re_main.yml@main
     with:
-      project: $env.project
-      c_extension: $env.c_extension
-      headless: $env.headless
+      project: $project
+      c_extension: $c_extension
+      headless: $headless
